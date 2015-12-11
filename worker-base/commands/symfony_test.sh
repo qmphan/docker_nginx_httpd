@@ -6,4 +6,4 @@ then
     exit -1;
 fi
 cd /var/www/$PROJECT_NAME/workspace/src/Symfony
-su nginx -c phpunit -c app
+su nginx -c "phpunit -c app"
