@@ -2,8 +2,10 @@ FROM centos
 
 MAINTAINER Minh Phan <mphan@wengo.com>
 
-RUN yum -y update 
+RUN yum -y update
+RUN yum install -y yum-utils
 RUN yum install -y epel-release
+RUN yum-config-manager --enable cr
 ########
 
 RUN yum install -y nginx supervisor git postgresql-server php-cli php-fpm php-pgsql php-xmlwriter php-mbstring
