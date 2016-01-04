@@ -8,7 +8,7 @@ RUN yum install -y epel-release
 RUN yum-config-manager --enable cr
 ########
 
-RUN yum install -y nginx supervisor git postgresql-server php-cli php-fpm php-pgsql php-xmlwriter php-mbstring
+RUN yum install -y nginx supervisor git postgresql-server php-cli php-fpm php-pgsql php-xmlwriter php-mbstring nodejs
 
 #----------------- NGINX configuration ----------------
 RUN rm /etc/nginx/nginx.conf
