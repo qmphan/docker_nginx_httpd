@@ -1,22 +1,7 @@
-#db:
-#   image: mysql
-#   ports:
-#   - "3306:3306"
-#   environment:
-#       MYSQL_ROOT_PASSWORD: symfonyrootpass
-#       MYSQL_DATABASE: symfony
-#       MYSQL_USER: symfony
-#       MYSQL_PASSWORD: symfonypass
 web:
     image: mphan/nginx_httpd
     ports:
     - "8080:80"
-#   environment:
-#       XDEBUG_HOST: 192.168.1.194
-#       XDEBUG_PORT: 9000
-#       XDEBUG_REMOTE_MODE: req
-#   links:
-#   - db
     volumes:
     - "/home/webmaster/www:/home/nginx/www"
 #    - "/home/webmaster/etc/nginx/conf.d:/etc/nginx/conf.d"
