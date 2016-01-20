@@ -14,7 +14,6 @@ RUN yum install -y nginx supervisor git php-cli php-fpm php-pgsql php-mysql php-
 RUN rm /etc/nginx/nginx.conf
 ADD nginx/nginx.conf /etc/nginx/
 ADD nginx/app.conf /etc/nginx/conf.d/
-ADD nginx/upstream.conf /etc/nginx/conf.d/upstream.conf
 ADD nginx/fastcgi_params /etc/nginx/
 ADD supervisord.conf /etc/supervisord.d/
 
