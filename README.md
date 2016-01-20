@@ -1,101 +1,16 @@
-Docker containers for Symfony development & production
+Docker containers for Nginx server
 ======================================================
 
-This repository provides Dockerfiles for setting up ready to use Symfony development and production environments.
+This Docker container run an instance of Nginx web server with php-fpm. It is preconfigured to serve multiple website. Follow these steps to have your web server setup quickly for multiple web sites:
 
-The configuration used in this repository makes use of Docker's layered image approach in the sense that the development 
-environment image is simply an additional layer on top of the base image of the production environment.
-This means your development environment will be practically identical to the production environment.
+1. Create a base directory for all your web site. For example /home/webmaster/www
+2. Inside /home/webmaster/www, place the source code for your different web site. The folder name should be the domain name. For domains that begins with 'www.', do not include 'www.' in the directory name. For example, for domain www.example.com, place the source in /home/webmaster/www/example.com
+3. Create a symbolic link 'wwwroot' inside /home/webmaster/www/example.com that point to the web root directory. It can be the example.com directory itself. Eg: ln -s . wwwroot
+4. Checkout the source code of thi project into <nginx-docker-src> directory.
+5. Update docker-compose.yml if the directory crreated at step 1 is not /home/webmaster/www.
+6. Install docker-compose if it is not yet installed on your server (cf https://docs.docker.com/compose/install/)
+7. Start the container with the commande:  docker-compose up -d
+8. Update DNS server for your domain to point to your server.
+9. Goto www.example.com
 
-Production images built from this repository are immutable and can be easily deployed to off-the-shelf Docker instances with 
-all application code, dependencies, folders, etc. already included.
-
-Structure
----------
-
-There is a `worker-base` image file that contains PHP-FPM and NGINX. Both processes expect a Symfony project at
-`/var/www/app` at runtime inside the container.
-
-There is a `worker-dev` development image that extends `worker-base` and adds development functionality such as Xdebug 
-and turns on PHP debug output. The image also sets Nginx's configuration to load `web/app_dev.php` instead 
-of `web/app.php`. This development image expects application files to be mounted into the container to 
-`/var/www/app` from the host which means any code changes will immediately take effect.
-
-There is a `worker-prod` production image that extends `worker-base` and simply bakes a Symfony project 
-into the container. This image can be easily deployed as an immutable throwaway instance of the entire
-application. This image should be built by executing `worker-prod/build-release.sh`.
-
-Configuration
--------------
-
-Container environment variables are used to adapt application behavior to the respective environment.
-
-Add a `app/config/parameters.php` file to your project and include it after `app/config/parameters.yml`
-in your configuration file:
-
-```yaml
-# app/config/config.yml
-imports:
-    - { resource: parameters.yml }
-    - { resource: parameters.php }
-
-# ...
-```
-
-In `parameters.php`, set Symfony parameters from environment variables as follows:
-
-```php
-// app/config/parameters.php
-$parameters = [
-    // ENV_VAR_NAME => symfony parameter name
-    'DB_1_PORT_3306_TCP_ADDR' => 'database_host',
-    'DB_1_PORT_3306_TCP_PORT' => 'database_port',
-    'DB_1_ENV_MYSQL_DATABASE' => 'database_name',
-    'DB_1_ENV_MYSQL_USER' => 'database_user',
-    'DB_1_ENV_MYSQL_PASSWORD' => 'database_password',
-    // ...
-];
-
-foreach ($parameters as $envVar => $sfParam) {
-    $value = getenv($envVar);
-    if ($value !== false && $value !== '') {
-        $container->setParameter($sfParam, $value);
-    }
-}
-```
-
-Note: All environment variables which are to be used as parameters need to be 
-defined in `worker-base/fpm/app.pool.conf`, otherwise they will not be
-visible to PHP code.
-
-Running app/console
--------------------
-
-To have Symfony's ``app/console`` utility work as expected, it needs to be run from inside the container so 
-that all environment variables are available for Symfony.
-
-Simply execute the following from the path of this repository:
-
-    docker-compose run worker /var/www/app/app/console
-
-Building SfDocker images
-------------------------
-
-To build the development images, run the following commands in the repository's top folder:
-
-    docker build -t symfony/worker-base worker-base
-    docker build -t symfony/worker-dev worker-dev
-
-Then simply launch the development server with
-
-    docker-compose up
-
-To build a production image, run the following command in the repository's top folder:
-
-    ./worker-prod/build-release.sh
-
-Authors
--------
-
-* Markus Weiland (@advancingu)
-* Scott Wilson (@scooterXL)
+NOTE: You need to make sure to have a database server setup if your website need one.
