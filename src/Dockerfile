@@ -6,9 +6,10 @@ RUN yum -y update
 RUN yum install -y yum-utils
 RUN yum install -y epel-release
 RUN yum-config-manager --enable cr
+RUN rpm -Uvh https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
 ########
 
-RUN yum install -y nginx supervisor git postgresql-server php-cli php-fpm php-pgsql php-xmlwriter php-mbstring nodejs
+RUN yum install -y nginx supervisor git postgresql-server php56w-cli php56w-fpm php56w-pgsql php56w-xmlwriter php56w-mbstring nodejs
 
 #----------------- NGINX configuration ----------------
 RUN rm /etc/nginx/nginx.conf
@@ -27,25 +28,29 @@ ADD postgres/pg_hba.conf /var/lib/pgsql/data/pg_hba.conf
 
 USER root
 
-#--------------- Add test running scripts ---------------------------
-ADD commands/setup_env.sh /commands/setup_env.sh
-ADD commands/symfony_test.sh /commands/symfony_test.sh
-
 #---------- NGINX user setup -------------
 RUN mkdir /home/nginx
 RUN chown nginx:nginx /home/nginx
 RUN usermod -u 1000 -s /bin/bash nginx -d /home/nginx
 
 #------- PHP UNIT ------#
-RUN curl -O https://phar.phpunit.de/phpunit-old.phar
-RUN chmod +x phpunit-old.phar
-RUN mv phpunit-old.phar /usr/local/bin/phpunit
+RUN curl -O https://phar.phpunit.de/phpunit.phar
+RUN chmod +x phpunit.phar
+RUN mv phpunit.phar /usr/local/bin/phpunit
 
 RUN rm /etc/php-fpm.d/www.conf
 
 ADD fpm/app.ini /etc/php-fpm.d/
 ADD fpm/app.ini /etc/php.d/
 ADD fpm/app.pool.conf /etc/php-fpm.d/
+
+#--------------- Add test running scripts ---------------------------
+
+USER nginx
+ADD commands /commands
+ADD composer/auth.json /home/nginx/.composer/auth.json
+
+USER root
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.d/supervisord.conf"]
 
