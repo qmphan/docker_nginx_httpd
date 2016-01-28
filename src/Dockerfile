@@ -28,6 +28,10 @@ ADD fpm/app.ini /etc/php-fpm.d/
 ADD fpm/app.ini /etc/php.d/
 ADD fpm/app.pool.conf /etc/php-fpm.d/
 
+#--------------- Add test running scripts ---------------------------
+ADD commands/setup_env.sh /commands/setup_env.sh
+ADD commands/symfony_test.sh /commands/symfony_test.sh
+
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.d/supervisord.conf"]
 
 EXPOSE 80
