@@ -9,7 +9,14 @@ RUN yum-config-manager --enable cr
 RUN rpm -Uvh https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
 ########
 
-RUN yum install -y nginx supervisor git postgresql-server php56w-cli php56w-fpm php56w-pgsql php56w-xmlwriter php56w-mbstring nodejs
+RUN yum install -y nginx supervisor git postgresql-server php56w-cli php56w-fpm php56w-pgsql php56w-xmlwriter php56w-mbstring which
+
+#----------------- Install Node.js by using nvm ----------------------------
+RUN curl https://raw.githubusercontent.com/creationix/nvm/v0.13.1/install.sh | bash
+RUN nvm install v4.2.6
+RUN nvm alias default v4.2.6
+RUN n=$(which node);n=${n%/bin/node}; chmod -R 755 $n/bin/*; cp -r $n/{bin,lib,share} /usr/local  # Install node globally
+RUN npm install protractor gulpjs/gulp-cli#4.0 -g
 
 #----------------- NGINX configuration ----------------
 RUN rm /etc/nginx/nginx.conf
