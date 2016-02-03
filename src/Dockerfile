@@ -14,7 +14,7 @@ RUN yum install -y nginx supervisor git postgresql-server php56w-cli php56w-fpm 
 #----------------- Install Node.js by using nvm ----------------------------
 RUN curl https://raw.githubusercontent.com/creationix/nvm/v0.13.1/install.sh | bash
 RUN source /root/.bash_profile; nvm install v4.2.6; nvm alias default v4.2.6; n=$(which node);n=${n%/bin/node}; chmod -R 755 $n/bin/*; cp -r $n/{bin,lib,share} /usr/local  # Install node globally
-RUN "npm install protractor gulpjs/gulp-cli#4.0 tsd -g"
+RUN npm install protractor gulpjs/gulp-cli#4.0 tsd -g
 
 #----------------- NGINX configuration ----------------
 RUN rm /etc/nginx/nginx.conf
@@ -45,6 +45,7 @@ RUN mv phpunit.phar /usr/local/bin/phpunit
 
 RUN rm /etc/php-fpm.d/www.conf
 
+ADD php/php.ini /etc/php/
 ADD fpm/app.ini /etc/php-fpm.d/
 ADD fpm/app.ini /etc/php.d/
 ADD fpm/app.pool.conf /etc/php-fpm.d/
