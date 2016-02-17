@@ -1,7 +1,9 @@
 web:
-    image: mphan/nginx_httpd
+    image: mphan/nginx_symfony_dev
+    container_name: web_symfony
     ports:
-    - "8080:80"
+        - "80:80"
     volumes:
-    - "/home/webmaster/www:/home/nginx/www"
-#    - "/home/webmaster/etc/nginx/conf.d:/etc/nginx/conf.d"
+        - "/var/www:/var/www"
+    dns:
+        - 172.17.0.1
