@@ -22,6 +22,7 @@ ADD nginx/nginx.conf /etc/nginx/
 ADD nginx/app.conf /etc/nginx/conf.d/
 ADD nginx/upstream.conf /etc/nginx/conf.d/upstream.conf
 ADD nginx/fastcgi_params /etc/nginx/
+ADD nginx/ssl   /etc/nginx/
 ADD supervisord.conf /etc/supervisord.d/
 
 #---------- Postgresql installation and configuration -------------
