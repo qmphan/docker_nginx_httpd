@@ -9,7 +9,7 @@ RUN yum-config-manager --enable cr
 RUN rpm -Uvh https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
 ########
 
-RUN yum install -y nginx supervisor git postgresql-server php56w-cli php56w-fpm php56w-pgsql php56w-xmlwriter php56w-mbstring php56w-intl nodejs which
+RUN yum install -y nginx supervisor git postgresql-server php56w-cli php56w-fpm php56w-pgsql php56w-xmlwriter php56w-mbstring php56w-intl php56w-gd nodejs which
 
 #----------------- Install Node.js by using nvm ----------------------------
 RUN curl https://raw.githubusercontent.com/creationix/nvm/v0.13.1/install.sh | bash
