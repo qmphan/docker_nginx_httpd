@@ -40,9 +40,7 @@ RUN chown nginx:nginx /home/nginx
 RUN usermod -u 1000 -s /bin/bash nginx -d /home/nginx
 
 #------- PHP UNIT ------#
-RUN curl -O https://phar.phpunit.de/phpunit.phar
-RUN chmod +x phpunit.phar
-RUN mv phpunit.phar /usr/local/bin/phpunit
+ADD packages/phpunit.phar /usr/local/bin/phpunit
 
 RUN rm /etc/php-fpm.d/www.conf
 
